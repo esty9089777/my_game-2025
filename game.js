@@ -13,11 +13,25 @@ const obstacles = [];
 let gameInterval;
 let isJumping = false;
 let coins = 0;
-let spd = 8; //מהירות
-let amoutDekel = 5;
+let spd = 6; //מהירות
+let amoutDekel = 8;
 let level = 1;
 let coinsTimerId = null;
 let record = 0;
+// מרווח אקראי בין מכשולים (נשתמש בטווח זה כדי לבחור מרווח אקראי)
+// הרחבתי את הטווח כדי לקבל שונות גדולה יותר בין המכשולים
+const OBSTACLE_MIN_SPACING = 150;
+const OBSTACLE_MAX_SPACING = 900;
+
+// בוחר מרווח אקראי עם קצת מגוון (קלאסטרים קטנים לפעמים)
+function getRandomSpacing() {
+    // 20% מהמקרים ניצור מרווח קטן (קלאסטר)
+    if (Math.random() < 0.2) {
+        return Math.floor(Math.random() * 100) + 120; // 120-219
+    }
+    // בדרך כלל בחר מרווח בטווח הרגיל
+    return Math.floor(Math.random() * (OBSTACLE_MAX_SPACING - OBSTACLE_MIN_SPACING + 1)) + OBSTACLE_MIN_SPACING;
+}
 const username = localStorage.getItem("username");
 let recordKey = "record";
 
@@ -86,9 +100,9 @@ function createSingleObstacle(speedRange) {
 
 // פונקציה ליצירת מספר מוקשים
 function createRandomObstacles(count) {
-    const minSpacing = 350;
-    const maxSpacing = 900;
-    let currentX = window.innerWidth + 50;
+    const minSpacing = OBSTACLE_MIN_SPACING;
+    const maxSpacing = OBSTACLE_MAX_SPACING;
+    let currentX = -4500; // התחלה מחוץ למסך
 
     document.getElementById("score_value").innerHTML = coins;
     console.log(`🎯 יוצר ${count} מוקשים...`);
@@ -100,20 +114,17 @@ function createRandomObstacles(count) {
         }
 
         const newObstacle = createSingleObstacle(spd);
-        document.body.appendChild(newObstacle.element);
 
         // חישוב רוחב המוקש הנוכחי לאחר ההוספה ל-DOM
         const obstacleWidth = newObstacle.element.offsetWidth;
 
-        // יצירת מרווח אקראי בין מוקשים
-        const spacing = Math.floor(Math.random() * (maxSpacing - minSpacing + 1)) + minSpacing;
+        // יצירת מרווח אקראי בין מוקשים בתוך הטווח המוגדר
+        const spacing = Math.floor(Math.random() * (OBSTACLE_MAX_SPACING - OBSTACLE_MIN_SPACING + 1)) + OBSTACLE_MIN_SPACING;
 
         // קביעת מיקום המוקש הנוכחי
         newObstacle.x = currentX;
         newObstacle.element.style.left = newObstacle.x + "px";
-
-        // שמירת המוקש במערך
-        obstacles.push(newObstacle);
+        console.log(`מוקש ${i}: x=${currentX}px`);
 
         // עדכון currentX למיקום הבא בהתחשב ברוחב המוקש + רווח
         currentX = newObstacle.x + obstacleWidth + spacing;
@@ -135,7 +146,9 @@ function createRandomObstacles(count) {
 function moveDekel() {
     //let dekelMove = -100;
     //dekel.style.left = dekelMove + 'px';
-    gameInterval = setInterval(() => {
+    
+    // תנועה מיידית של המכשולים
+    const updateObstacles = () => {
         for (let i = obstacles.length - 1; i >= 0; i--) {
             const obstacle12 = obstacles[i];
             // הזז את המוקש
@@ -154,10 +167,26 @@ function moveDekel() {
                 console.log(`🗑️ מוקש הוסר. נותרו: ${obstacles.length}`);
             }
         }
-        if (Math.random() < 0.005) {
-            createSingleObstacle(5)
+        
+        // יצירת מכשול חדש עם spacing ראוי
+        if (Math.random() < 0.015) {
+            if (obstacles.length > 0) {
+                const lastObstacle = obstacles[obstacles.length - 1];
+                const lastRight = lastObstacle.x + lastObstacle.element.offsetWidth;
+                // חישוב מרווח אקראי עבור יצירת מכשול חדש
+                const spacing = Math.floor(Math.random() * (OBSTACLE_MAX_SPACING - OBSTACLE_MIN_SPACING + 1)) + OBSTACLE_MIN_SPACING;
+                const newX = lastRight + spacing;
+                const newObstacle = createSingleObstacle(spd);
+                newObstacle.x = newX;
+                newObstacle.element.style.left = newX + "px";
+            }
         }
-    }, 30);
+    };
+    
+    // תנועה מיידית
+    updateObstacles();
+    
+    gameInterval = setInterval(updateObstacles, 30);
 }
 function check(obstacle) {
     // בדיקת התנגשות
@@ -280,7 +309,7 @@ function startGame()
 
     // איפוס משתנים
     coins = 0;
-    amoutDekel = 5;
+    amoutDekel = 8;
     spd = 6;
     level = 1;
     const scoreValueElement = document.getElementById("score_value");
@@ -299,23 +328,18 @@ if (levelValueElement) { // Check if the element exists
     panda.style.backgroundImage = "url('123.png')";
     isJumping = false;
 
-    //document.addEventListener("keydown", jumpHandler);
-
     // הסרת מכשולים קיימים מה-DOM ומהמערך
     obstacles.forEach(obstacleObj => {
         if (obstacleObj.element && obstacleObj.element.parentNode) {
             obstacleObj.element.parentNode.removeChild(obstacleObj.element);
         }
     });
-    document.getElementById("score_value").textContent = 0;
-    startGameTimerCoins();
-    moveDekel();
-    obstacles.forEach((obstacleObj) => {
-        if (obstacleObj.element && obstacleObj.element.parentNode) {
-            document.body.removeChild(obstacleObj.element);
-        }
-    })
     obstacles.length = 0;
+    document.getElementById("score_value").textContent = 0;
+    document.addEventListener("keydown", jumpHandler);
+    startGameTimerCoins();
+    createRandomObstacles(amoutDekel);
+    moveDekel();
 
 }
 if (document.querySelector('.game-container')) {
