@@ -1,0 +1,128 @@
+body {
+  background: linear-gradient(135deg, #87ceeb 0%, #98fb98 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.top-bar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top:0px;
+}
+
+
+.game {
+  position: relative;
+  width: 1500px;
+  height: 700px;
+  background-image: url("רקע (1).png");
+  border: 2px solid #333;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+#panda {
+  background-image: url("123.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 7%;
+  height: 20%;
+  position: absolute;
+  bottom: 550px;
+  right: 50px;
+  left: 0px;
+  transition: bottom 0.2s;
+}
+
+#dekel {
+  width: 5%;
+  height: 25%;
+  background-image: url("מכשול.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: absolute;
+  bottom: 25px;
+  left: -50px;
+}
+
+
+.instructions {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.instructions p {
+  color: #7f8c8d;
+  margin: 5px 0;
+  font-size: 1.1em;
+}
+
+#game-over {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+  color: red;
+  display: none;
+}
+
+.Mode
+{
+  display: block;
+}
+
+#btn1, #btn2
+{
+  width: 250px;
+  height: 60px;
+  margin: 15px;
+  border-radius: 10px;
+}
+
+#home
+{
+  width: 250px;
+  height: 60px;
+  margin: 15px;
+  border-radius: 10px;
+}
+
+#score {
+  color: #27ae60;
+  font-size: 1.3em;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  direction: ltr;
+}
+
+#level {
+  color: #9b59b6;
+  font-size: 1.3em;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  direction: ltr;
+}
+
+#record {
+  color: #e74c3c;
+  font-size: 1.3em;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  direction: ltr;
+}
+
+#hi
+{
+    color: #3c9de7;
+  font-size: 1.3em;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+

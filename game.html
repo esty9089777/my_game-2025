@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="game-container">
+  <div class="top-bar">
+    <input id="home" type="button" value="למסך הבית"  onclick="window.location.href='homepage1.html'">
+  
+      <p id="hi"></p>
+  
+      <div class="score1" id="score"><span id="score_value">0</span>   :ניקוד</div>
+      <div id="level"><span id="level_value">1</span>   :רמה</div>
+      <div class="record1" id="record"><span id="record_value">0</span>   :שיא</div>
+  </div>
+   <div class="game">
+    <div id="panda"></div>
+    <div id="game-over">Game Over</div>
+  </div>
+  <div class="instructions">
+            <p>לחץ על רווח או לחץ על המסך כדי לקפוץ</p>
+            <p class="level-info">כל 20 נקודות - רמה חדשה עם אתגרים חדשים!</p>
+    </div>
+      <div class="controls">
+            <button id="restartBtn" type="button" class="hidden">משחק חדש</button>
+        </div>
+ </div>
+  <script src="game.js"></script>
+</body>
+</html>
